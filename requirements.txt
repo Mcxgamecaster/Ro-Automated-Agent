@@ -1,0 +1,9 @@
+dxcam
+mss
+opencv-python
+pytesseract
+pynput
+pywin32
+pydantic
+pyyaml
+pytest
