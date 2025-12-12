@@ -21,6 +21,9 @@ class FrameSource:
         self._dx_camera = dxcam.create(output_color="BGR") if dxcam else None
         self._mss = mss.mss() if mss else None
 
+    def update_hwnd(self, hwnd: Optional[int]) -> None:
+        self.hwnd = hwnd
+
     def grab(self) -> Optional[np.ndarray]:
         rect = get_client_rect(self.hwnd) if self.hwnd else None
         if rect is None:

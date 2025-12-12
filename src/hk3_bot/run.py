@@ -17,7 +17,7 @@ from .safety import SafetyContext
 from .state import GameState
 from .utils import ensure_dir, save_json
 from .vision.anchors import AnchorDetector
-from .window import find_roblox_window, get_client_rect, is_focused
+from .window import find_roblox_window, get_client_rect, hwnd_is_valid, is_focused
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +61,10 @@ def main() -> None:
 
     while True:
         start = time.time()
+        if not hwnd_is_valid(hwnd):
+            hwnd = find_roblox_window(cfg.window_patterns)
+            safety_ctx.hwnd = hwnd
+            source.update_hwnd(hwnd)
         executor.safety.update_rect()
         frame = source.grab()
         if frame is None:
@@ -69,6 +73,7 @@ def main() -> None:
         anchors = anchor_detector.detect_all(frame, profile.anchors)
         gs.anchors = anchors
         gs.focused = is_focused(hwnd) if hwnd else False
+        gs.hwnd_valid = hwnd_is_valid(hwnd)
         gs.client_rect = executor.safety.client_rect
         if args.debug:
             debug_path = Path(cfg.debug_dir) / "latest_full.png"
