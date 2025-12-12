@@ -60,3 +60,14 @@ def is_focused(hwnd: int) -> bool:
         return False
     fg = win32gui.GetForegroundWindow()
     return fg == hwnd
+
+
+def hwnd_is_valid(hwnd: Optional[int]) -> bool:
+    """Return True if the handle refers to an existing window."""
+    if hwnd is None or win32gui is None:
+        return False
+    try:
+        return bool(win32gui.IsWindow(hwnd))
+    except Exception:  # noqa: BLE001
+        logger.exception("Failed to validate hwnd")
+        return False
