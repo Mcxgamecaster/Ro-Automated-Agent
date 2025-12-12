@@ -1,0 +1,45 @@
+<Application x:Class="HumankindApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="AccentColor">#FF5F9CFF</Color>
+            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+            <SolidColorBrush x:Key="WindowBackground" Color="#0F172A"/>
+            <SolidColorBrush x:Key="CardBackground" Color="#182235"/>
+            <SolidColorBrush x:Key="TextPrimary" Color="#E5E7EB"/>
+            <SolidColorBrush x:Key="TextSecondary" Color="#9CA3AF"/>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="0 4 0 12"/>
+                <Setter Property="Padding" Value="12"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                <Setter Property="Background" Value="#1F2937"/>
+                <Setter Property="BorderBrush" Value="#2F3B52"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="0 8 0 0"/>
+                <Setter Property="Padding" Value="12"/>
+                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
