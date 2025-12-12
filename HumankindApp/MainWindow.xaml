@@ -1,0 +1,63 @@
+<Window x:Class="HumankindApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Humankind Automation"
+        Height="520" Width="840"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBackground}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="#111827" Padding="24" CornerRadius="0 0 20 20">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="16" ShadowDepth="0" Opacity="0.6"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 0 0 4" >
+                <TextBlock Text="Humankind Ware" FontSize="22" FontWeight="Bold"/>
+                <TextBlock Text="Automation Companion" Foreground="{StaticResource TextSecondary}" Margin="10 0 0 0"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="32">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Background="{StaticResource CardBackground}" Padding="24" Margin="0 0 24 0" CornerRadius="16">
+                    <TextBlock Text="Run calibration" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="Set the config path and profile then press start." Foreground="{StaticResource TextSecondary}" Margin="0 0 0 12"/>
+
+                    <TextBlock Text="Config file" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding ConfigPath, UpdateSourceTrigger=PropertyChanged}" ToolTip="Example: configs/humankind3.yaml"/>
+
+                    <TextBlock Text="Profile" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Profile, UpdateSourceTrigger=PropertyChanged}" ToolTip="Example: windowed"/>
+
+                    <TextBlock Text="Python executable" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding PythonExecutable, UpdateSourceTrigger=PropertyChanged}" ToolTip="Example: python or full path"/>
+
+                    <Button Content="Start calibration" Command="{Binding RunCalibrationCommand}"/>
+                    <Button Content="Stop" Background="#EF4444" Command="{Binding StopCalibrationCommand}"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" Background="{StaticResource CardBackground}" Padding="24" CornerRadius="16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Session output" FontSize="18" FontWeight="SemiBold"/>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 12 0 0">
+                            <TextBlock Text="{Binding OutputLog}" TextWrapping="Wrap"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

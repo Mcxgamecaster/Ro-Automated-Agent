@@ -1,0 +1,37 @@
+{
+  "window_patterns": [
+    {"contains": "Roblox"}
+  ],
+  "profiles": {
+    "windowed": {
+      "strict_focus": true,
+      "fps": 10,
+      "anchors": {
+        "TechTreeHeader": {"file": "TechTreeHeader.png", "threshold": 0.8},
+        "ShopHeader": {"file": "ShopHeader.png", "threshold": 0.8},
+        "CloseX": {"file": "CloseX.png", "threshold": 0.85}
+      },
+      "rois": {
+        "minimap": {"x": 0.8, "y": 0.75, "w": 0.18, "h": 0.22},
+        "counters": {"x": 0.8, "y": 0.05, "w": 0.18, "h": 0.12},
+        "center_screen": {"x": 0.4, "y": 0.4, "w": 0.2, "h": 0.2}
+      },
+      "risky_templates": ["PurchaseButton", "BuyPackButton"]
+    },
+    "fullscreen": {
+      "strict_focus": true,
+      "fps": 10,
+      "anchors": {
+        "TechTreeHeader": {"file": "TechTreeHeader.png", "threshold": 0.8}
+      },
+      "rois": {
+        "minimap": {"x": 0.82, "y": 0.78, "w": 0.16, "h": 0.18}
+      },
+      "risky_templates": []
+    }
+  },
+  "templates_dir": "assets/templates",
+  "debug_dir": "debug",
+  "logs_dir": "logs",
+  "default_scales": [0.75, 0.85, 1.0, 1.15, 1.3]
+}
