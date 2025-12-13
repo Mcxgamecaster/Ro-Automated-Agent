@@ -6,4 +6,5 @@ pynput
 pywin32
 pydantic
 pyyaml
+google-genai
 pytest

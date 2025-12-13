@@ -16,9 +16,24 @@ class LowLevelExecutor:
         for action in actions:
             atype = action.get("type")
             if atype == "click":
-                self.executor.click(int(action["x"]), int(action["y"]))
+                x = int(action["x"])
+                y = int(action["y"])
+                rect = self.executor.safety.client_rect
+                if rect is not None:
+                    left, top, _, _ = rect
+                    x += left
+                    y += top
+                self.executor.click(x, y)
             elif atype == "keypress":
-                self.executor.press_key(str(action.get("key", "")))
+                key = str(action.get("key", ""))
+                ms_raw = action.get("ms")
+                if ms_raw is None:
+                    self.executor.press_key(key)
+                else:
+                    try:
+                        self.executor.press_key(key, int(ms_raw))
+                    except Exception:  # noqa: BLE001
+                        self.executor.press_key(key)
             elif atype == "wait":
                 self.executor.wait(int(action.get("ms", 50)))
             else:

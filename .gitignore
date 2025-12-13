@@ -1,0 +1,39 @@
+# Visual Studio / MSBuild
+.vs/
+**/[Bb]in/
+**/[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Build outputs / publish artifacts
+**/[Pp]ublish/
+**/*.exe
+**/*.dll
+**/*.pdb
+**/*.cache
+**/*.zip
+
+# NuGet
+**/packages/
+*.nupkg
+
+# Python
+.venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

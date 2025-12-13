@@ -10,7 +10,7 @@ import cv2
 from .actions import ActionExecutor, kill_switch_listener
 from .capture import FrameSource
 from .config import BotConfig
-from .controller.high_level import LLMPlannerStub, RuleBasedPlanner
+from .controller.high_level import GeminiPlanner, LLMPlannerStub, RuleBasedPlanner
 from .controller.low_level import LowLevelExecutor
 from .controller.policies import PolicyOptions
 from .safety import SafetyContext
@@ -29,7 +29,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--assist", action="store_true")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--fps", type=int, default=None)
-    parser.add_argument("--planner", choices=["rules", "stub"], default="rules")
+    parser.add_argument("--planner", choices=["rules", "stub", "gemini"], default="rules")
+    parser.add_argument("--gemini-model", default="gemini-2.5-flash")
+    parser.add_argument("--gemini-api-key", default=None)
+    parser.add_argument("--gemini-no-vision", action="store_true")
+    parser.add_argument("--gemini-interval", type=float, default=1.5)
     parser.add_argument("--dry-run", action="store_true")
     return parser
 
@@ -51,7 +55,17 @@ def main() -> None:
     safety_ctx = SafetyContext(hwnd, policy.strict_focus, client_rect)
     executor = ActionExecutor(safety_ctx)
     low_level = LowLevelExecutor(executor)
-    planner = RuleBasedPlanner() if args.planner == "rules" else LLMPlannerStub(cfg.debug_dir)
+    if args.planner == "rules":
+        planner = RuleBasedPlanner()
+    elif args.planner == "stub":
+        planner = LLMPlannerStub(cfg.debug_dir)
+    else:
+        planner = GeminiPlanner(
+            model=str(args.gemini_model),
+            api_key=args.gemini_api_key,
+            send_vision=not bool(args.gemini_no_vision),
+            min_interval_s=float(args.gemini_interval),
+        )
     listener = kill_switch_listener(executor.safety)
 
     ensure_dir(cfg.debug_dir)
@@ -79,7 +93,16 @@ def main() -> None:
             debug_path = Path(cfg.debug_dir) / "latest_full.png"
             cv2.imwrite(str(debug_path), frame)
             save_json(str(Path(cfg.debug_dir) / "state.json"), gs.__dict__)
-        plan = planner.plan(gs)
+
+        image_bytes = None
+        try:
+            ok, buf = cv2.imencode(".jpg", frame)
+            if ok:
+                image_bytes = buf.tobytes()
+        except Exception:  # noqa: BLE001
+            image_bytes = None
+
+        plan = planner.plan(gs, image_bytes=image_bytes)
         actions = plan.get("actions", [])
         if args.assist and plan.get("requires_confirmation", False):
             resp = input("Assist mode: execute plan? [y/N] ")

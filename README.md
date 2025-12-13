@@ -25,13 +25,25 @@ Key entry points:
 - `HumankindApp/MainWindow.xaml(.cs)` – simple WPF wrapper to start/stop calibration from a GUI.
 
 ## Prerequisites
-- Windows 10/11, Python 3.11 (64-bit) with build tools for native deps.
-- Roblox must stay windowed and focused while automation is active.
-- Optional: Tesseract installed and on PATH to enable OCR; the bot still runs without it.
+- **Windows 10/11**
+- **Python 3.11+** (64-bit) with build tools for native deps
+- **.NET 8 SDK** (required to build the WPF GUI app)
+  - Download: https://dotnet.microsoft.com/download/dotnet/8.0
+- Roblox must stay windowed and focused while automation is active
+- Optional: Tesseract installed and on PATH to enable OCR; the bot still runs without it
 
-## Setup
-1. Clone the repo and open a **Developer Command Prompt** or PowerShell on Windows.
-2. Create & activate a virtual environment (recommended):
+## Quick Setup (Recommended)
+Double-click **`setup.bat`** to automatically:
+1. Check Python installation
+2. Create and configure virtual environment
+3. Install all Python dependencies
+4. Build the WPF GUI app (if .NET SDK is installed)
+
+## Manual Setup
+If you prefer manual installation:
+
+1. Clone the repo and open PowerShell.
+2. Create & activate a virtual environment:
    ```powershell
    python -m venv .venv
    .venv\Scripts\activate
@@ -41,7 +53,11 @@ Key entry points:
    pip install --upgrade pip
    pip install -r requirements.txt
    ```
-4. Ensure template PNGs exist under `assets/templates/` (collect via calibration).
+4. Build the WPF GUI (requires .NET 8 SDK):
+   ```powershell
+   dotnet build HumankindApp -c Release
+   ```
+5. Ensure template PNGs exist under `assets/templates/` (collect via calibration).
 
 ## Configuration
 Edit `configs/humankind3.yaml` (JSON-compatible YAML). Important sections:
@@ -79,7 +95,17 @@ Common flags:
 - `--debug`: dump latest capture to `debug/latest_full.png` and `debug/state.json`.
 - `--fps`: override capture rate.
 - `--planner rules|stub`: rule-based or JSON stub planner.
+- `--planner gemini`: Gemini planner (requires `google-genai` and an API key).
 - `--dry-run`: plan without emitting input.
+
+Gemini planner example:
+```powershell
+python -m hk3_bot.run --config configs/humankind3.yaml --profile windowed --planner gemini --gemini-model gemini-2.5-flash --assist
+```
+
+API key options:
+- Provide directly: `--gemini-api-key YOUR_KEY`
+- Or set env var (recommended): `GEMINI_API_KEY=YOUR_KEY`
 
 Behavior highlights:
 - Each loop re-validates the Roblox window, client rect, focus, and anchors before acting.
@@ -95,7 +121,30 @@ python -m hk3_bot.calibration --config configs/humankind3.yaml --profile windowe
 - Save cropped templates to `assets/templates/NAME.png` for anchor/UI detection.
 - Persist ROIs/templates back into the YAML profile.
 
-WPF helper (Windows): open `HumankindApp.sln` in Visual Studio or run `dotnet build` and launch `HumankindApp.exe`. The GUI starts/stops the same calibration command and streams stdout/stderr to the window.
+## HumankindApp (WPF GUI)
+The GUI provides a visual interface to run calibration without using the command line.
+
+### Building the App
+Option 1 - Use the batch file:
+```powershell
+.\build-app.bat
+```
+
+Option 2 - Manual build:
+```powershell
+dotnet build HumankindApp -c Release
+```
+
+### Running the App
+After building, the executable is located at:
+```
+HumankindApp\bin\Release\net8.0-windows10.0.19041.0\HumankindApp.exe
+```
+
+The GUI allows you to:
+- Set config file path and profile
+- Specify Python executable (if not in PATH)
+- Start/stop calibration with live output streaming
 
 ## Troubleshooting
 - **Roblox window not detected**: verify the title substring/regex in `window_patterns` matches the current window title.
